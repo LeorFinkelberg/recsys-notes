@@ -16,6 +16,19 @@ $$
 
 То есть на главной диагонали матрицы стоят нули, чтобы защититься от тривиальных решений, а элементы матрицы вне диагонали определяются как отношение элементов матрицы $P$ к диагональным элементам матрицы $P$ с обратным знаком.
 
+Простейшая реализация
+```python
+def ease(
+	rating_matrix: t.Union[np.array, pd.DataFrame],
+	lambda_: float = 250.0
+) -> np.array:
+    P = np.linalg.inv(rating_matrix.T @ rating_matrix + lambda_ * np.eye(rating_matrix.shape[1]))
+    weight_matrix = - P / np.diag(P)
+    weight_matrix[np.diag_indices_from(weight_matrix)] = 0
+
+    return weight_matrix
+```
+
 ```python
 X = np.array(...)
 G = X.T.dot(X)
